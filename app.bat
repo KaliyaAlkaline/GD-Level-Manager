@@ -2,6 +2,7 @@
 :mainMenu
 title GD Level Editor
 cls
+if not exist levels md levels
 if not exist path.lnk goto setup
 node check.js
 echo Levels:
