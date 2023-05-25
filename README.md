@@ -23,6 +23,7 @@ If you have any issues with the tool doing nothing, consider the following:
   - Have you retried the action again or reset the tool?
 
 ~~If all of these are a yes, then there may be issues on my end involving my API for downloading levels. If this is the case, you can expect the tool to work again soon.~~
+
 Update: This application has been updated to no longer rely on my custom API, as it now makes use of the official Geometry Dash API. If this tool has issues downloading online levels despite all of these checks, then the Geometry Dash servers may be down.
 
 # Additional Notes
