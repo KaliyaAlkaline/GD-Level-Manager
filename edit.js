@@ -1,4 +1,5 @@
 const fs = require("fs")
+const zlib = require("zlib")
 const path = fs.readFileSync("path.lnk", "utf8").replace(/"/g, "").replace(/\//g, "\\").slice(0, -2) + "\\"
 const levels = JSON.parse(fs.readFileSync(path + ".levels", "utf8"))
 const slices = JSON.parse(fs.readFileSync("slices.json", "utf8"))
@@ -9,21 +10,22 @@ function addData(data) {
 	for (let i = 0; i < l.length; i++) {
 		l[i] = l[i].split("</string>")[0]
 	}
-	let data = data.split(";")
 	let c = 1
+	data = data.split(";")
 	for (let i = 0; i < data.length; i++) {
 		if (data[i].includes("1,1329")) {
 			data[i] = data[i].replace("1,1329", "1,142") + ",12," + c++
 		}
 	}
-	let data = data.join(";")
-	l[ping_[0] - 1] = data
+	l[ping_[0] - 1] = data.join(";")
 	for (let i = 0; i < l.length; i++) {
 		l[i] = "<key>" + (i + 1) + "</key>\n<string>" + l[i] + "</string>"
 	}
-	let l = l.join("\n")
-	let list = slices[0] + l + slices[1]
-	return list
+	let list_ = slices[0] + l.join("\n") + slices[1]
+	return list_
+}
+function decode(data) {
+	return zlib.unzipSync(Buffer.from(data, "base64")).toString()
 }
 if (ping_[0] <= levels.length && ping_[0] > 0) {
 	if (ping_[1] === "name") {
@@ -58,10 +60,6 @@ if (ping_[0] <= levels.length && ping_[0] > 0) {
 	}
 	if (ping_[1] === "data") {
 		if (ping_[2] === "id" || ping_[2] === "dlid") {
-			const zlib = require("zlib")
-			function decode(data) {
-				return zlib.unzipSync(Buffer.from(data, "base64")).toString()
-			}
 			(async () => {
 				let params = new URLSearchParams()
 				params.append("gameVersion", 21)
@@ -71,7 +69,8 @@ if (ping_[0] <= levels.length && ping_[0] > 0) {
 				params.append("inc", 0)
 				params.append("extras", 0)
 				params.append("secret", "Wmfd2893gb7")
-				let data = await fetch("http://www.boomlings.com/database/downloadGJLevel22.php", {headers: {"Content-Type": "application/x-www-form-urlencoded", "user-agent": ""}, body: params, method: "POST"}).then(res => {return res.text()})
+				let res = await fetch("http://www.boomlings.com/database/downloadGJLevel22.php", {headers: {"Content-Type": "application/x-www-form-urlencoded", "user-agent": ""}, body: params, method: "POST"}).then(res => {return res.text()})
+				let data = decode(res.split(":")[7])
 				if (data !== -1) {
 					if (ping_[2] === "id") {
 						fs.writeFileSync(path + "Resources\\LevelData.plist", addData(data), "utf8")
