@@ -10,9 +10,9 @@ function diff(n) {
 	if (n === 6) {return "Demon"}
 }
 for (let i = 0; i < levels.length; i++) {
-	var g = ""
+	let g = ""
 	if (levels[i]["stars"] !== 1) {
-		var g = "s"
+		g += "s"
 	}
 	console.log((i + 1) + ". " + levels[i]["name"] + " - " + diff(levels[i]["difficulty"]) + " - " + levels[i]["stars"] + " Star" + g + " - " + levels[i]["song"])
 }
