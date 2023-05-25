@@ -13,16 +13,15 @@ if ((ping_["l1"] <= levels.length && ping_["l1"] > 0) && (ping_["l2"] <= levels.
 	for (let i = 0; i < l.length; i++) {
 		l[i] = l[i].split("</string>")[0]
 	}
-	let _1 = JSON.parse(JSON.stringify(l[ping_["l1"] - 1]))
-	let _2 = JSON.parse(JSON.stringify(l[ping_["l2"] - 1]))
-	l[ping_["l1"] - 1] = _2
-	l[ping_["l2"] - 1] = _1
+	let _3 = JSON.parse(JSON.stringify(l[ping_["l1"] - 1]))
+	let _4 = JSON.parse(JSON.stringify(l[ping_["l2"] - 1]))
+	l[ping_["l1"] - 1] = _4
+	l[ping_["l2"] - 1] = _3
 	for (let i = 0; i < l.length; i++) {
 		l[i] = "<key>" + (i + 1) + "</key>\n<string>" + l[i] + "</string>"
 	}
-	let l = l.join("\n")
-	let list = slices[0] + l + slices[1]
+	let list_ = slices[0] + l.join("\n") + slices[1]
 	fs.writeFileSync(path + ".levels", JSON.stringify(levels), "utf8")
-	fs.writeFileSync(path + "Resources\\LevelData.plist", list, "utf8")
+	fs.writeFileSync(path + "Resources\\LevelData.plist", list_, "utf8")
 }
 process.exit(0)
