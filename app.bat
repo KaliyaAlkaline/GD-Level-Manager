@@ -4,7 +4,7 @@ title GD Level Editor
 cls
 if not exist levels md levels
 if not exist path.lnk goto setup
-taskkill /f /im GeometryDash.exe>nul
+call :kill
 node check.js
 echo Levels:
 echo:
@@ -52,7 +52,7 @@ node readline.js
 set /p s=<ping_.json
 del /q ping_.json
 echo {"name":"%l%","difficulty":"%d%","stars":"%n%","song":"%s%"}>ping_.json
-taskkill /f /im GeometryDash.exe>nul
+call :kill
 node add.js
 del /q ping_.json
 goto mainMenu
@@ -65,7 +65,7 @@ echo Select a level to remove . . .
 echo:
 set /p a=Level Number: 
 echo ^%a%>ping_.json
-taskkill /f /im GeometryDash.exe>nul
+call :kill
 node remove.js
 del /q ping_.json
 goto mainMenu
@@ -79,7 +79,7 @@ echo:
 set /p a=Level Number 1: 
 set /p b=Level Number 2: 
 echo {"l1":%a%,"l2":%b%}>ping_.json
-taskkill /f /im GeometryDash.exe>nul
+call :kill
 node swap.js
 del /q ping_.json
 goto mainMenu
@@ -94,7 +94,7 @@ if %errorlevel%==2 goto mainMenu
 goto rl
 :doit
 cls
-taskkill /f /im GeometryDash.exe>nul
+call :kill
 node reset.js
 goto mainMenu
 :el
@@ -133,7 +133,7 @@ echo {"prompt":"Level Name: "}>ping_.json
 node readline.js
 set /p l=<ping_.json
 echo [%c%,"name","%l%"]>ping_.json
-taskkill /f /im GeometryDash.exe>nul
+call :kill
 node edit.js
 del /q ping_.json
 goto editMenu
@@ -144,7 +144,7 @@ echo Note: Ratings are ranked from 1-6, Easy being 1 and Demon being 6.
 echo:
 choice /n /c 123456 /m Rating: 
 echo [%c%,"rating",%errorlevel%]>ping_.json
-taskkill /f /im GeometryDash.exe>nul
+call :kill
 node edit.js
 del /q ping_.json
 goto editMenu
@@ -153,7 +153,7 @@ title Edit Stars
 cls
 set /p n=Stars: 
 echo [%c%,"stars","%n%"]>ping_.json
-taskkill /f /im GeometryDash.exe>nul
+call :kill
 node edit.js
 del /q ping_.json
 goto editMenu
@@ -166,7 +166,7 @@ echo {"prompt":"Song Name: "}>ping_.json
 node readline.js
 set /p s=<ping_.json
 echo [%c%,"song","%s%"]>ping_.json
-taskkill /f /im GeometryDash.exe>nul
+call :kill
 node edit.js
 del /q ping_.json
 goto editMenu
@@ -191,7 +191,7 @@ title Load by ID
 cls
 set /p id=Level ID: 
 echo [%c%,"data","id","%id%"]>ping_.json
-taskkill /f /im GeometryDash.exe>nul
+call :kill
 node edit.js
 del /q ping_.json
 goto ald
@@ -201,7 +201,7 @@ cls
 set /p txt=Text File (drag it in): 
 set txt=%txt:"=%
 echo [%c%,"data","txt","%txt:\=/%"]>ping_.json
-taskkill /f /im GeometryDash.exe>nul
+call :kill
 node edit.js
 del /q ping_.json
 goto ald
@@ -210,7 +210,7 @@ title Download Level by ID
 cls
 set /p id=Level ID: 
 echo [%c%,"data","dlid","%id%"]>ping_.json
-taskkill /f /im GeometryDash.exe>nul
+call :kill
 node edit.js
 del /q ping_.json
 goto ald
@@ -219,3 +219,5 @@ cls
 set /p p=Path to your Geometry Dash folder (drag it in): 
 echo %p:\=/%>path.lnk
 goto mainMenu
+:kill
+taskkill /f /im GeometryDash.exe 2>nul 1>nul
