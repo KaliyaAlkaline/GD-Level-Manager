@@ -14,9 +14,8 @@ if (ping_ <= levels.length && ping_ > 0) {
 	for (let i = 0; i < l.length; i++) {
 		l[i] = "<key>" + (i + 1) + "</key>\n<string>" + l[i] + "</string>"
 	}
-	let l = l.join("\n")
-	let list = slices[0] + l + slices[1]
+	let list_ = slices[0] + l.join("\n") + slices[1]
 	fs.writeFileSync(path + ".levels", JSON.stringify(levels), "utf8")
-	fs.writeFileSync(path + "Resources\\LevelData.plist", list, "utf8")
+	fs.writeFileSync(path + "Resources\\LevelData.plist", list_, "utf8")
 }
 process.exit(0)
