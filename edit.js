@@ -1,29 +1,28 @@
-const https = require("https")
 const fs = require("fs")
 const path = fs.readFileSync("path.lnk", "utf8").replace(/"/g, "").replace(/\//g, "\\").slice(0, -2) + "\\"
 const levels = JSON.parse(fs.readFileSync(path + ".levels", "utf8"))
 const slices = JSON.parse(fs.readFileSync("slices.json", "utf8"))
 const ping_ = JSON.parse(fs.readFileSync("ping_.json", "utf8"))
 function addData(data) {
-	var list = fs.readFileSync(path + "Resources\\LevelData.plist", "utf8")
-	var l = list.split("<string>").slice(1, -1)
+	let list = fs.readFileSync(path + "Resources\\LevelData.plist", "utf8")
+	let l = list.split("<string>").slice(1, -1)
 	for (let i = 0; i < l.length; i++) {
 		l[i] = l[i].split("</string>")[0]
 	}
-	var data = data.split(";")
-	var c = 1
+	let data = data.split(";")
+	let c = 1
 	for (let i = 0; i < data.length; i++) {
 		if (data[i].includes("1,1329")) {
 			data[i] = data[i].replace("1,1329", "1,142") + ",12," + c++
 		}
 	}
-	var data = data.join(";")
+	let data = data.join(";")
 	l[ping_[0] - 1] = data
 	for (let i = 0; i < l.length; i++) {
 		l[i] = "<key>" + (i + 1) + "</key>\n<string>" + l[i] + "</string>"
 	}
-	var l = l.join("\n")
-	var list = slices[0] + l + slices[1]
+	let l = l.join("\n")
+	let list = slices[0] + l + slices[1]
 	return list
 }
 if (ping_[0] <= levels.length && ping_[0] > 0) {
@@ -59,25 +58,32 @@ if (ping_[0] <= levels.length && ping_[0] > 0) {
 	}
 	if (ping_[1] === "data") {
 		if (ping_[2] === "id" || ping_[2] === "dlid") {
-			https.get("https://level-scraper-api.d4d028de3015345.repl.co/data/" + ping_[3], (resp) => {
-				var data = ""
-				resp.on("data", (chunk) => {
-					data += chunk
-				})
-				resp.on("end", () => {
-					if (data !== "There was an issue grabbing the level data, please try again later.") {
-						if (ping_[2] === "id") {
-							fs.writeFileSync(path + "Resources\\LevelData.plist", addData(data), "utf8")
-						}
-						if (ping_[2] === "dlid") {
-							fs.writeFileSync("./levels/" + ping_[3] + ".txt", data, "utf8")
-						}
+			const zlib = require("zlib")
+			function decode(data) {
+				return zlib.unzipSync(Buffer.from(data, "base64")).toString()
+			}
+			(async () => {
+				let params = new URLSearchParams()
+				params.append("gameVersion", 21)
+				params.append("binaryVersion", 35)
+				params.append("gdw", 0)
+				params.append("levelID", ping_[3])
+				params.append("inc", 0)
+				params.append("extras", 0)
+				params.append("secret", "Wmfd2893gb7")
+				let data = await fetch("http://www.boomlings.com/database/downloadGJLevel22.php", {headers: {"Content-Type": "application/x-www-form-urlencoded", "user-agent": ""}, body: params, method: "POST"}).then(res => {return res.text()})
+				if (data !== -1) {
+					if (ping_[2] === "id") {
+						fs.writeFileSync(path + "Resources\\LevelData.plist", addData(data), "utf8")
 					}
-					process.exit(0)
-				})
-			})
+					if (ping_[2] === "dlid") {
+						fs.writeFileSync("./levels/" + ping_[3] + ".txt", data, "utf8")
+					}
+				}
+				process.exit(0)
+			})()
 		} else {
-			var data = fs.readFileSync(ping_[3].replace(/"/g, "").replace(/\//g, "\\"), "utf8")
+			let data = fs.readFileSync(ping_[3].replace(/"/g, "").replace(/\//g, "\\"), "utf8")
 			fs.writeFileSync(path + "Resources\\LevelData.plist", addData(data), "utf8")
 			process.exit(0)
 		}
