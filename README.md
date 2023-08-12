@@ -30,5 +30,5 @@ If you have any issues with the tool doing nothing, consider the following:
   - To open the tool, open the file app.bat.
   - All level data you decide to download to a text file with be located in the levels subfolder.
   - To navigate the different menus, press one of the numbers displayed on the screen.
-  - All online levels that are downloaded will be cached and encrypted within my API for future use. This is to prevent API abuse, the only drawback being that the tool will not read any future updates on the level.
+  - ~~All online levels that are downloaded will be cached and encrypted within my API for future use. This is to prevent API abuse, the only drawback being that the tool will not read any future updates on the level.~~
   - If you load any online level data, the color palette won't be saved. To fix this, you can make a copy of the level you want to download and edit in color triggers to recreate the different color channels. Unfortunately, there is no other fix for this.
